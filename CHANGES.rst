@@ -1,7 +1,12 @@
 Pending
 -------
 
-* None
+* Support ancient Django (tested with 1.2.5).  Do not require
+  django-countries as this needs at least Django 1.4.  When
+  django-countries is not available or gives ImportErrors or
+  AttributeErrors, the SWIFT field validation is less good.
+  [maurits]
+
 
 0.2.6
 -----

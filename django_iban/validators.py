@@ -1,15 +1,27 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
+import pkg_resources
 import string
 
 from django.core.exceptions import ValidationError
 from django.utils.translation import ugettext_lazy as _
 
 try:
-  from django_countries.data import COUNTRIES
-except ImportError:
-  from django_countries.countries import OFFICIAL_COUNTRIES as COUNTRIES
+    pkg_resources.get_distribution('django_countries')
+except pkg_resources.DistributionNotFound:
+    COUNTRIES = {}
+else:
+    try:
+        from django_countries.data import COUNTRIES
+    except AttributeError:
+        # Happens for too old Django version.
+        COUNTRIES = {}
+    except ImportError:
+        try:
+            from django_countries.countries import OFFICIAL_COUNTRIES as COUNTRIES
+        except ImportError:
+            COUNTRIES = {}
 
 
 # Dictionary of ISO country code to IBAN length.
@@ -175,5 +187,5 @@ def swift_bic_validator(value):
 
     # Letters 5 and 6 consist of an ISO 3166-1 alpha-2 country code.
     country_code = value[4:6]
-    if country_code not in COUNTRIES:
+    if COUNTRIES and country_code not in COUNTRIES:
         raise ValidationError(_('{0} is not a valid SWIFT-BIC Country Code.'.format(country_code)))

@@ -39,9 +39,11 @@ setup(
     packages=find_packages(),
     include_package_data=True,
     zip_safe=False,
+    # Note: django-countries is needed for better SWIFT validation,
+    # but needs django 1.4 or higher.  We [Zest] have made it optional.
     install_requires=[
-        'django>=1.4',
-        'django-countries>=1.5',
+        'django',  # Originally: 'django>=1.4'
+        # 'django-countries>=1.5',
     ],
 
     classifiers=[
